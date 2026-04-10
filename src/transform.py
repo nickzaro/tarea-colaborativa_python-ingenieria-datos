@@ -30,3 +30,16 @@ def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
     norm_df['listed_in'] = norm_df['listed_in'].str.lower()
 
     return norm_df
+
+def generate_features(df: pd.DataFrame) -> pd.DataFrame:
+    """genera nuevas columnas a partir de los datos existentes"""
+    feat_df = df.copy()
+
+    # extraemos el año y mes exactos en que se añadio a la plataforma
+    feat_df['added_year'] = feat_df['date_added'].dt.year
+    feat_df['added_month'] = feat_df['date_added'].dt.month
+
+    # separaremos el numero de la duracion (ej: de 90 min o 2 temporadas extrara solo el numero)
+    feat_df['duration_num'] = feat_df['duration'].str.extract(r'(\d+)').astype(float)
+
+    return feat_df
