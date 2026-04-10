@@ -89,3 +89,20 @@ def plot_scatter_duration(movies_df):
     plt.tight_layout()
     plt.savefig('output/6_dispersion_duracion.png')
     plt.close()
+
+
+def plot_content_distribution(final_df):
+    print("Iniciando generación individual de los gráficos...")
+    sns.set_theme(style="whitegrid")
+    
+    os.makedirs("output", exist_ok=True)
+    movies_df = final_df[final_df['type'].str.upper() == 'MOVIE']
+    
+    plot_top_ratings(final_df)
+    plot_type_proportions(final_df)
+    plot_violin_releases(final_df)
+    plot_correlation_heatmap(final_df)
+    plot_gauss_duration(movies_df)
+    plot_scatter_duration(movies_df)
+    
+    print("¡Proceso exitoso! Se han generado 6 archivos PNG independientes en la carpeta 'output/'.")
