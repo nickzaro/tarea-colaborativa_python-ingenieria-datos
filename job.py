@@ -3,6 +3,7 @@ from pandas import DataFrame
 from src.extract import load_source_data
 from src.transform import clean_missing_values, normalize_columns
 from src.characterize import generate_features
+from src.load import save_data
 from src.visualize import plot_content_distribution
 
 def run_pipeline():
@@ -10,6 +11,7 @@ def run_pipeline():
         'data/netflix_titles_1.csv', 'data/netflix_titles_2.csv', 
         'data/netflix_titles_3.csv', 'data/netflix_titles_4.csv'
     ]
+    name_dataframe = "output/netflix_titles_processed.csv"
 
     try:
         # Cargamos en paralelo
@@ -19,8 +21,8 @@ def run_pipeline():
         clean_df = clean_missing_values(raw_df)
         normalized_df = normalize_columns(clean_df)
         # 2
-        #TODO: apuntar a normalized_df cuando este listo
-        final_df = generate_features(raw_df)
+        final_df = generate_features(normalized_df)
+        save_data(final_df, name_dataframe)
         # 3
         plot_content_distribution(final_df)
         print("Termino correctamente el pipeline.")
@@ -31,5 +33,6 @@ def run_pipeline():
     except Exception as e:
         print(f"Ocurrió un error inesperado: {e}")
         print("Termino incorrectamente el pipeline.")
+
 if __name__ == "__main__":
     run_pipeline()
