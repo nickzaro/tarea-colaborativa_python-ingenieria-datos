@@ -21,6 +21,8 @@ def plot_top_ratings(df):
     plt.tight_layout()
     plt.savefig('output/1_top_ratings.png')
     plt.close()
+
+
 def plot_type_proportions(df):
     plt.figure(figsize=(8, 8))
     counts = df['type'].value_counts()
@@ -30,6 +32,8 @@ def plot_type_proportions(df):
     plt.tight_layout()
     plt.savefig('output/2_proporcion_peliculas_series.png')
     plt.close()
+
+
 def plot_violin_releases(df):
     plt.figure(figsize=(10, 6))
     sns.violinplot(data=df[df['release_year'] > 1990], x='type', y='release_year', 
@@ -42,3 +46,20 @@ def plot_violin_releases(df):
     plt.savefig('output/3_distribucion_lanzamientos_violin.png')
     plt.close()
 
+
+def plot_correlation_heatmap(df):
+    plt.figure(figsize=(8, 6))
+    corr_cols = ['release_year', 'year_added', 'duration_num']
+    corr_matrix = df[corr_cols].corr()
+    
+    ax = sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', vmin=-1, vmax=1, 
+                     cbar_kws={'label': 'Grado de correlación'})
+    
+    labels = ['Año Lanzamiento', 'Año añadido a Netflix', 'Duración (minutos)']
+    ax.set_xticklabels(labels, rotation=45, ha='right')
+    ax.set_yticklabels(labels, rotation=0)
+    
+    plt.title('Matriz de Correlación')
+    plt.tight_layout()
+    plt.savefig('output/4_matriz_correlacion.png')
+    plt.close()
