@@ -76,3 +76,16 @@ def plot_gauss_duration(movies_df):
     plt.tight_layout()
     plt.savefig('output/5_campana_gauss_duracion.png')
     plt.close()
+
+
+def plot_scatter_duration(movies_df):
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(data=movies_df[movies_df['release_year'] > 1980], 
+                    x='release_year', y='duration_num', alpha=0.3, color='green', label='Duración min.')
+    plt.title('Dispersión: Año de Lanzamiento vs Duración')
+    plt.xlabel('Año de Lanzamiento')
+    plt.ylabel('Duración (minutos)')
+    plt.legend(title="Valor Muestral")
+    plt.tight_layout()
+    plt.savefig('output/6_dispersion_duracion.png')
+    plt.close()
