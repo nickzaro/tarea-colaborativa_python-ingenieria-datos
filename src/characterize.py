@@ -9,9 +9,6 @@ def generate_features(normalized_df):
     # Copia de seguridad para evitar advertencias de SettingWithCopy
     df_features = normalized_df.copy()
 
-    #TODO: no será necesario cuando se normalice
-    df_features["date_added"] = pd.to_datetime(df_features["date_added"].astype(str).str.strip())
-
     # Extraemos año y nombre del mes de la columna que ya transformamos a datetime
     df_features['year_added'] = df_features['date_added'].dt.year
     df_features['month_added'] = df_features['date_added'].dt.month_name()
@@ -21,7 +18,6 @@ def generate_features(normalized_df):
 
     # Extraemos el valor numérico de la columna 'duration'
     # "90 min" -> 90.0 | "2 Seasons" -> 2.0
-    #TODO: se podria borrar luego
     df_features['duration_num'] = df_features['duration'].str.extract('(\d+)').astype(float)
     
     # Creamos columnas específicas para no mezclar minutos con temporadas

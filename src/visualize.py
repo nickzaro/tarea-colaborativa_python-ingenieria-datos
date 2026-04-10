@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import os
-
+import warnings
 # ==============================================================================
 # MÓDULO DE VISUALIZACIÓN DE DATOS (DATA VISUALIZATION MODULE)
 # Principio de Responsabilidad Única (SRP): Cada función tiene la única tarea de
@@ -164,6 +164,7 @@ def plot_scatter_duration(movies_df):
 
 
 def plot_content_distribution(final_df):
+    
     """
     ============================================================================
     Orquestador / Facade Pattern (Patrón Fachada según Clean Code).
@@ -173,11 +174,14 @@ def plot_content_distribution(final_df):
     Cumple con aislar las sub-rutinas en funciones declarativas independientes.
     ============================================================================
     """
+    # Ignorar todos los avisos de futuras versiones para los graficos
+    warnings.simplefilter(action='ignore', category=FutureWarning)
+
     print("Iniciando generación individual de los gráficos...")
     sns.set_theme(style="whitegrid")
     
     os.makedirs("output", exist_ok=True)
-    movies_df = final_df[final_df['type'] == 'MOVIE']
+    movies_df = final_df[final_df['type'] == 'Movie']
     
     plot_top_ratings(final_df)
     plot_type_proportions(final_df)
