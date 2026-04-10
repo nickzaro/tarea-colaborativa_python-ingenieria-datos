@@ -63,3 +63,16 @@ def plot_correlation_heatmap(df):
     plt.tight_layout()
     plt.savefig('output/4_matriz_correlacion.png')
     plt.close()
+
+
+def plot_gauss_duration(movies_df):
+    plt.figure(figsize=(10, 6))
+    sns.histplot(data=movies_df, x='duration_num', kde=True, color='purple', label='Películas')
+    plt.title('Campana de Gauss: Distribución de Duración (Películas)')
+    plt.xlabel('Duración (minutos)')
+    plt.ylabel('Frecuencia / Cantidad de Títulos')
+    plt.legend(title="Tipo")
+    plt.xlim(0, 250)
+    plt.tight_layout()
+    plt.savefig('output/5_campana_gauss_duracion.png')
+    plt.close()
