@@ -12,7 +12,7 @@ def clean_missing_values(df: pd.DataFrame) -> pd.DataFrame:
         clean_df[col] = clean_df[col].fillna('Unknown')
 
     # si no hay fecha o rating se eliminaran por completo
-    clean_df = clean_df.dropna(subset=['date_added', 'rating'])
+    clean_df = clean_df.dropna(subset=["rating", "duration", "date_added"])
 
     return clean_df
 
@@ -26,8 +26,11 @@ def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
     # convertimos la columna de texto 'date_added' a un tipo datetime real
     norm_df['date_added'] = pd.to_datetime(norm_df['date_added'], format='mixed')
 
-    # normalizamos a minúsculas la columna de géneros/categorías
-    norm_df['listed_in'] = norm_df['listed_in'].str.lower()
+    # normalizamos a mayusculas la columna de géneros/categorías
+    norm_df['listed_in'] = norm_df['listed_in'].str.capitalize()
+
+    # eliminamos los espacios vacíos de inicio y fin en el id
+    norm_df["show_id"] = norm_df["show_id"].str.strip()
 
     return norm_df
 
