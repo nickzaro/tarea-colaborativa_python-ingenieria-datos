@@ -2,6 +2,11 @@ import pandas as pd
 from concurrent.futures import ProcessPoolExecutor
 import os
 
+REQUIRED_COLUMNS = ['show_id', 'type', 'title', 'director', 'cast', 'country',
+                       'date_added', 'release_year', 'rating', 'duration',
+                       'listed_in', 'description']
+
+
 def load_fragment(file_path):
     """
     Carga un fragmento individual. 
@@ -13,7 +18,7 @@ def load_fragment(file_path):
     
     try:
         print(f"Procesando: {file_path}")
-        return pd.read_csv(file_path)
+        return pd.read_csv(file_path, names=REQUIRED_COLUMNS, header=0)
     except Exception as e:
         print(f"Error al leer {file_path}: {e}")
         return None
