@@ -21,3 +21,15 @@ def plot_top_ratings(df):
     plt.tight_layout()
     plt.savefig('output/1_top_ratings.png')
     plt.close()
+
+
+def plot_type_proportions(df):
+    plt.figure(figsize=(8, 8))
+    counts = df['type'].value_counts()
+    plt.pie(counts, labels=counts.index, autopct='%1.1f%%', colors=['skyblue', 'lightcoral'], startangle=90)
+    plt.title('Proporción de Películas vs Series')
+    plt.legend(counts.index, title="Tipo de Contenido", loc="upper left", bbox_to_anchor=(1, 0.9))
+    plt.tight_layout()
+    plt.savefig('output/2_proporcion_peliculas_series.png')
+    plt.close()
+
