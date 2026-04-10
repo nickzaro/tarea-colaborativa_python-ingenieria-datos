@@ -181,7 +181,7 @@ def plot_content_distribution(final_df):
     sns.set_theme(style="whitegrid")
     
     os.makedirs("output", exist_ok=True)
-    movies_df = final_df[final_df['type'] == 'MOVIE']
+    movies_df = final_df[final_df['type'] == 'Movie']
     
     plot_top_ratings(final_df)
     plot_type_proportions(final_df)
