@@ -1,7 +1,8 @@
 from pandas import DataFrame
 
 from src.extract import load_source_data
-from src.transform import clean_missing_values, normalize_columns, generate_features
+from src.transform import clean_missing_values, normalize_columns
+from src.characterize import generate_features
 from src.visualize import plot_content_distribution
 
 def run_pipeline():
@@ -18,7 +19,8 @@ def run_pipeline():
         clean_df = clean_missing_values(raw_df)
         normalized_df = normalize_columns(clean_df)
         # 2
-        final_df = generate_features(normalized_df)
+        #TODO: apuntar a normalized_df cuando este listo
+        final_df = generate_features(raw_df)
         # 3
         plot_content_distribution(final_df)
         print("Termino correctamente el pipeline.")
