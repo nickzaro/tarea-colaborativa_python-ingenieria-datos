@@ -6,6 +6,9 @@ def clean_missing_values(df: pd.DataFrame) -> pd.DataFrame:
     # hacemos una copia para no alterar el dataframe original
     clean_df = df.copy()
 
+    # Eliminar duplicados
+    clean_df = clean_df.drop_duplicates()
+
     # rellenamos valores nulos en columnas de texto con 'desconocido'
     cols_to_fill = ['director', 'cast', 'country']
     for col in cols_to_fill:
@@ -20,14 +23,12 @@ def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
     """normaliza los tipos de datos y el formato del texto"""
     norm_df = df.copy()
 
-    # eliminamos los espacios vacíos de inicio y fin en las fecha
-    norm_df['date_added'] = norm_df['date_added'].str.strip()
-
     # convertimos la columna de texto 'date_added' a un tipo datetime real
-    norm_df['date_added'] = pd.to_datetime(norm_df['date_added'], format='mixed')
+    norm_df["date_added"] = pd.to_datetime(norm_df["date_added"].astype(str).str.strip())
 
-    # normalizamos a mayusculas la columna de géneros/categorías
-    norm_df['listed_in'] = norm_df['listed_in'].str.capitalize()
+    # pasamos a minusculas usando capitalize
+    norm_df["type"] = norm_df["type"].str.capitalize()
+    norm_df["rating"] = norm_df["rating"].str.capitalize()
 
     # eliminamos los espacios vacíos de inicio y fin en el id
     norm_df["show_id"] = norm_df["show_id"].str.strip()
