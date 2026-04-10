@@ -9,7 +9,7 @@ def clean_missing_values(df: pd.DataFrame) -> pd.DataFrame:
     # rellenamos valores nulos en columnas de texto con 'desconocido'
     cols_to_fill = ['director', 'cast', 'country']
     for col in cols_to_fill:
-        clean_df[col] = clean_df[col].fillna('Desconocido')
+        clean_df[col] = clean_df[col].fillna('Unknown')
 
     # si no hay fecha o rating se eliminaran por completo
     clean_df = clean_df.dropna(subset=['date_added', 'rating'])
