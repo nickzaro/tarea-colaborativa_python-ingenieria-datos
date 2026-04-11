@@ -37,3 +37,18 @@ def generate_governance_metadata(df: pd.DataFrame, output_path: str) -> None:
         json.dump(metadata, f, indent=4)
         
     print(f"[Auditoria] Metadatos de la carga guardados en: {metadata_path}")
+
+def publish_to_data_warehouse(df: pd.DataFrame, db_path: str = "output/netflix_dw.db") -> None:
+
+    os.makedirs(os.path.dirname(db_path), exist_ok=True)
+    
+    # [Clean Code] Uso del bloque Try-Except-Finally para Safe Disposal (cerrar la DB sí o sí).
+    conn = sqlite3.connect(db_path)
+    try:
+        print(f"[Data Warehouse] Inyectando {len(df)} registros analiticos...")
+        df.to_sql("dim_netflix_titles", con=conn, if_exists="replace", index=False)
+        print("[Data Warehouse] Carga transaccional completada.")
+    except Exception as e:
+        print(f"[Data Warehouse] Error durante la transaccion SQL: {e}")
+    finally:
+        conn.close()
