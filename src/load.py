@@ -52,3 +52,29 @@ def publish_to_data_warehouse(df: pd.DataFrame, db_path: str = "output/netflix_d
         print(f"[Data Warehouse] Error durante la transaccion SQL: {e}")
     finally:
         conn.close()
+
+def save_data(df: pd.DataFrame, name_dataframe: str) -> None:
+
+    print("\n" + "="*40)
+    print("INICIANDO FASE DE CARGA (LOAD)")
+    print("="*40)
+    
+    # 1. Pipeline Defensivo: Compuerta de calidad
+    if not execute_quality_gate(df):
+        raise ValueError("ALERTA: Los datos curados no pasaron los criterios de calidad.")
+    
+    os.makedirs(os.path.dirname(name_dataframe), exist_ok=True)
+
+    # 2. Exportacion Plana hacia Output Visual
+    print(f"Exportando dataset curado plano CSV en: {name_dataframe}")
+    df.to_csv(name_dataframe, index=False, encoding='utf-8')
+    
+    # 3. Pipeline de Gobernanza
+    generate_governance_metadata(df, name_dataframe)
+    
+    # 4. Pipeline Transaccional SQL
+    publish_to_data_warehouse(df)
+    
+    print("="*40)
+    print("FASE DE CARGA COMPLETADA EXITOSAMENTE")
+    print("="*40 + "\n")
