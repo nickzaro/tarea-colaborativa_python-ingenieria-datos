@@ -4,8 +4,16 @@ import json
 from datetime import datetime
 import os
 
-def execute_quality_gate(df: pd.DataFrame) -> bool:
+# ==============================================================================
+# MÓDULO DE CARGA (LOAD)
+# ==============================================================================
 
+def execute_quality_gate(df: pd.DataFrame) -> bool:
+    """
+    [SRP] Single Responsibility Principle: Única tarea de validar las reglas de negocio.
+    [Clean Code] Fail Fast: Si el dato está mal o impuro (nulo/vacío), detiene el proceso 
+    de inmediato sin intentar hacer reparaciones que puedan corromper la BD final.
+    """
     if df.empty:
         print("[FALLO] Calidad de Datos Fallida: El DataFrame esta vacio.")
         return False
@@ -17,7 +25,10 @@ def execute_quality_gate(df: pd.DataFrame) -> bool:
     return True
 
 def generate_governance_metadata(df: pd.DataFrame, output_path: str) -> None:
-
+    """
+    [SRP] Single Responsibility Principle: Función dedicada exclusivamente a la auditoría.
+    [Clean Code] Meaningful Names: El nombre de la función expresa claramente la acción.
+    """
     metadata_dir = "output/metadata"
     os.makedirs(metadata_dir, exist_ok=True)
     
@@ -39,7 +50,10 @@ def generate_governance_metadata(df: pd.DataFrame, output_path: str) -> None:
     print(f"[Auditoria] Metadatos de la carga guardados en: {metadata_path}")
 
 def publish_to_data_warehouse(df: pd.DataFrame, db_path: str = "output/netflix_dw.db") -> None:
-
+    """
+    [OCP] Open/Closed Principle: Esta función está abierta para agregar otros 
+    motores de bases de datos, pero la lógica dentro de ella jamás rompe a los demás.
+    """
     os.makedirs(os.path.dirname(db_path), exist_ok=True)
     
     # [Clean Code] Uso del bloque Try-Except-Finally para Safe Disposal (cerrar la DB sí o sí).
@@ -54,7 +68,10 @@ def publish_to_data_warehouse(df: pd.DataFrame, db_path: str = "output/netflix_d
         conn.close()
 
 def save_data(df: pd.DataFrame, name_dataframe: str) -> None:
-
+    """
+    [Patrón Fachada / Facade Pattern]: Orquestador aislado invocado por job.py.
+    [Clean Code] Type Hinting implementado para indicar entrada y salida esperada (None).
+    """
     print("\n" + "="*40)
     print("INICIANDO FASE DE CARGA (LOAD)")
     print("="*40)
