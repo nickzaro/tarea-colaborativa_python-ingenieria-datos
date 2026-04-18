@@ -39,7 +39,7 @@ def load_source_data(table_list):
     
     # Verificamos si logramos cargar todo
     if len(valid_results) != len(table_list):
-        print("Atención: No se cargaron todos las tablas.")
+        print("Atención: No se cargaron todas las tablas.")
         raise FileNotFoundError("Faltan tablas por cargar")
 
     if not valid_results:

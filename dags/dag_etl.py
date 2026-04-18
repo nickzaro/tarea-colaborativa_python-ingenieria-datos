@@ -154,9 +154,6 @@ def wrapper_visualize():
 # ==============================================================================
 # DEFINICIÓN DEL DAG
 # ==============================================================================
-
-
-
 with DAG(
     dag_id='dag_etl',
     description='Pipeline completo: Extract → Transform → Load → Characterize → Visualize',
@@ -220,5 +217,5 @@ with DAG(
     )
 
     # Cadena completa del pipeline:
-    # Extract → Transform → Load → Characterize → Visualize
+    # [...] → Extract → Transform → Load → Characterize → Visualize
     [task_extraer_part_1, task_extraer_part_2, task_extraer_part_3, task_extraer_part_4] >> task_extraer >> task_transformar >> task_cargar >> task_caracterizar >> task_visualizar
