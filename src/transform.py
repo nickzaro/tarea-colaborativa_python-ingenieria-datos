@@ -15,7 +15,7 @@ def clean_missing_values(df: pd.DataFrame) -> pd.DataFrame:
         clean_df[col] = clean_df[col].fillna('Unknown')
 
     # si no hay fecha o rating se eliminaran por completo
-    clean_df = clean_df.dropna(subset=["rating", "duration", "date_added","date_added"])
+    clean_df = clean_df.dropna(subset=["rating", "duration", "date_added"])
 
     return clean_df
 
