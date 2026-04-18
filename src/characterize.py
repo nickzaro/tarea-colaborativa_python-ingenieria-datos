@@ -16,6 +16,10 @@ def generate_features(normalized_df):
     # Extraemos solo el primer género listado para simplificar visualizaciones
     df_features["main_genre"] = df_features["listed_in"].apply(lambda x: x.split(",")[0])
 
+    # Extraemos el valor numérico de la columna 'duration'
+    # "90 min" -> 90.0 | "2 Seasons" -> 2.0
+    df_features['duration_num'] = df_features['duration'].str.extract('(\d+)').astype(float)
+    
     
     # Diferencia entre el año actual y el año de estreno original
     current_year = date.today().year
