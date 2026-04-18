@@ -3,7 +3,21 @@ import os
 from datetime import datetime
 
 import pandas as pd
+
+
+# ==============================================================================
+# MÓDULO DE CARGA (LOAD) — Adaptado para Apache Airflow
+# ==============================================================================
+
+
 def execute_quality_gate(df: pd.DataFrame) -> bool:
+    """
+    [SRP] Compuerta de calidad defensiva antes de escribir en el destino final.
+
+    Reglas de negocio validadas:
+      - El DataFrame no debe estar vacío.
+      - La columna show_id no debe contener valores nulos (clave primaria).
+    """
     if df.empty:
         print("[FALLO] Calidad de Datos: El DataFrame está vacío.")
         return False
@@ -14,7 +28,12 @@ def execute_quality_gate(df: pd.DataFrame) -> bool:
 
     return True
 
+
 def generate_governance_metadata(df: pd.DataFrame, output_path: str) -> None:
+    """
+    [SRP] Auditoría de gobernanza: genera un JSON con métricas de la carga.
+    El archivo se guarda en output/metadata/ con timestamp en el nombre.
+    """
     metadata_dir = "output/metadata"
     os.makedirs(metadata_dir, exist_ok=True)
 
@@ -36,7 +55,12 @@ def generate_governance_metadata(df: pd.DataFrame, output_path: str) -> None:
 
     print(f"[Auditoría] Metadatos guardados en: {metadata_path}")
 
+
 def publish_to_data_warehouse(df: pd.DataFrame, sql_tools) -> None:
+    """
+    [OCP] Publica el DataFrame en la tabla final del Data Warehouse SQLite.
+    Utiliza sql_tools para mantener la lógica de conexión centralizada.
+    """
     target_table = "dim_netflix_titles"
     print(f"[Data Warehouse] Inyectando {len(df)} registros en '{target_table}'...")
     sql_tools.save_df_to_sql(df, target_table)
@@ -44,6 +68,16 @@ def publish_to_data_warehouse(df: pd.DataFrame, sql_tools) -> None:
 
 
 def run_load(source_table: str, sql_tools) -> None:
+    """
+    [Patrón Fachada] Orquestador de la fase Load.
+
+    Parámetros
+    ----------
+    source_table : str
+        Nombre de la tabla SQLite que contiene los datos transformados.
+    sql_tools : module
+        Módulo con las funciones load_df_from_sql / save_df_to_sql.
+    """
     print("\n" + "=" * 40)
     print("INICIANDO FASE DE CARGA (LOAD)")
     print("=" * 40)
