@@ -1,4 +1,5 @@
 import pandas as pd
+from scripts.sql_tools import save_df_to_sql, load_df_from_sql
 import os
 
 REQUIRED_COLUMNS = ['show_id', 'type', 'title', 'director', 'cast', 'country',
@@ -21,31 +22,31 @@ def load_fragment(file_path):
         print(f"Error al leer {file_path}: {e}")
         return None
 
-def load_source_data(file_list):
+def load_source_data(table_list):
     """
-    Carga de datos de forma secuencial (uno por uno).
+    Carga los tablas en una sola tabla maestra
     """
-    print(f"Iniciando extracción secuencial de {len(file_list)} archivos...")
+    print(f"Iniciando la union de {len(table_list)} tablas...")
     
     valid_results = []
     
     # Usamos un bucle for tradicional
-    for file_path in file_list:
-        df_fragmento = load_fragment(file_path)
+    for table in table_list:
+        df_fragmento = load_df_from_sql(table)
         
         if df_fragmento is not None:
             valid_results.append(df_fragmento)
     
     # Verificamos si logramos cargar todo
-    if len(valid_results) != len(file_list):
-        print("Atención: No se cargaron todos los archivos esperados.")
-        raise FileNotFoundError("Faltan fragmentos críticos")
+    if len(valid_results) != len(table_list):
+        print("Atención: No se cargaron todas las tablas.")
+        raise FileNotFoundError("Faltan tablas por cargar")
 
     if not valid_results:
-        print("No se cargó ningún dato válido.")
+        print("No se cargó ninguna tabla válida.")
         return pd.DataFrame(columns=REQUIRED_COLUMNS)
 
-    print(f"Concatenando {len(valid_results)} fragmentos exitosos...")
+    print(f"Concatenando {len(valid_results)} tablas exitosos...")
     full_df = pd.concat(valid_results, ignore_index=True)
     
     return full_df

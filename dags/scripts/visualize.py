@@ -16,8 +16,8 @@ def plot_top_ratings(df) -> None:
     top_ratings = df['rating'].value_counts().head(10).index
     ax = sns.countplot(
         data=df[df['rating'].isin(top_ratings)],
-        x='rating', hue='rating', palette='Set2',
-        legend=False, order=top_ratings, dodge=False
+        x='rating', palette='Set2',
+        order=top_ratings
     )
     plt.title('Top 10 Clasificaciones (Ratings) más comunes')
     plt.xlabel('Clasificación (Rating)')
@@ -50,12 +50,11 @@ def plot_violin_releases(df) -> None:
     sns.violinplot(
         data=df[df['release_year'] > 1990],
         x='type', y='release_year',
-        hue='type', palette='muted', legend=True, dodge=False
+        palette='muted'
     )
     plt.title('Distribución de Lanzamientos (Violin)')
     plt.xlabel('Tipo de Contenido')
     plt.ylabel('Año de Lanzamiento Original')
-    plt.legend(title="Clasificación")
     plt.tight_layout()
     plt.savefig(f'{OUTPUT_DIR}/3_distribucion_lanzamientos_violin.png')
     plt.close()
