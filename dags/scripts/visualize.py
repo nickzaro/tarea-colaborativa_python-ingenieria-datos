@@ -103,3 +103,36 @@ def plot_scatter_duration(movies_df) -> None:
     plt.savefig(f'{OUTPUT_DIR}/6_dispersion_duracion.png')
     plt.close()
     print("  ✔ Gráfico 6 generado: 6_dispersion_duracion.png")
+
+def run_visualize(source_table: str, sql_tools) -> None:
+    warnings.simplefilter(action='ignore', category=FutureWarning)
+
+    print("\n" + "=" * 40)
+    print("INICIANDO FASE DE VISUALIZACIÓN (VISUALIZE)")
+    print("=" * 40)
+
+    # 1. Leer datos desde SQLite
+    df = sql_tools.load_df_from_sql(source_table)
+    print(f"Registros disponibles para graficar: {len(df)}")
+
+    # La columna categórica en SQLite se guarda como texto; la reconvertimos
+    df['type'] = df['type'].astype(str)
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    sns.set_theme(style="whitegrid")
+
+    # 2. Subconjunto solo de películas
+    movies_df = df[df['type'] == 'Movie']
+
+    # 3. Generar los 6 gráficos
+    print("Generando gráficos...")
+    plot_top_ratings(df)
+    plot_type_proportions(df)
+    plot_violin_releases(df)
+    plot_correlation_heatmap(df)
+    plot_gauss_duration(movies_df)
+    plot_scatter_duration(movies_df)
+
+    print("=" * 40)
+    print(f"VISUALIZACIÓN COMPLETADA — 6 PNGs en '{OUTPUT_DIR}/'")
+    print("=" * 40 + "\n")
