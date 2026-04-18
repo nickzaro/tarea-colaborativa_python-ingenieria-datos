@@ -8,8 +8,15 @@ def generate_features(normalized_df):
     """
     # Copia de seguridad para evitar advertencias de SettingWithCopy
     df_features = normalized_df.copy()
-)
 
+    # Extraemos año y nombre del mes de la columna que ya transformamos a datetime
+    df_features['year_added'] = df_features['date_added'].dt.year
+    df_features['month_added'] = df_features['date_added'].dt.month_name()
+    
+    # Extraemos solo el primer género listado para simplificar visualizaciones
+    df_features["main_genre"] = df_features["listed_in"].apply(lambda x: x.split(",")[0])
+
+    
     # Diferencia entre el año actual y el año de estreno original
     current_year = date.today().year
     df_features['content_age'] = current_year - df_features['release_year']
