@@ -15,7 +15,8 @@ CSV_FILES = [
 TABLE_EXTRACT_LIST = ["netflix_extract_1", "netflix_extract_2", "netflix_extract_3", "netflix_extract_4"]
 
 TABLE_EXTRACT = "netflix_extract"     # salida de Extract
-# Lee los archivos por partes, los une y guarda en una tabla de sqlite
+
+
 def wrapper_extract_part_1():
     
     try:
@@ -48,6 +49,7 @@ def wrapper_extract_part_4():
     except Exception as e:
         exit(1)
 
+# Lee los tablas temporales, los une y guarda en una tabla de sqlite
 def wrapper_extract():
     try:
         full_df = load_source_data(TABLE_EXTRACT_LIST)
