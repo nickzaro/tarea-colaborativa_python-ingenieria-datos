@@ -20,7 +20,14 @@ def generate_features(normalized_df):
     # "90 min" -> 90.0 | "2 Seasons" -> 2.0
     df_features['duration_num'] = df_features['duration'].str.extract('(\d+)').astype(float)
     
-    
+    # Creamos columnas específicas para no mezclar minutos con temporadas
+    df_features["movie_duration_min"] = df_features.apply(
+    lambda x: x["duration_num"] if x["type"] =="Movie" else None, axis=1
+)
+    df_features["tv_show_seasons"] = df_features.apply(
+    lambda x: x["duration_num"] if x["type"] =="Tv show" else None, axis=1
+)
+
     # Diferencia entre el año actual y el año de estreno original
     current_year = date.today().year
     df_features['content_age'] = current_year - df_features['release_year']
