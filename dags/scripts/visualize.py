@@ -1,14 +1,17 @@
 import os
 import warnings
-
 import matplotlib
 matplotlib.use('Agg')   # Backend no-interactivo: obligatorio en contenedores sin pantalla
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+# ==============================================================================
+# MÓDULO DE VISUALIZACIÓN (VISUALIZE) — Adaptado para Apache Airflow
+# Cada función genera y exporta un gráfico PNG independiente a output/.
+# ==============================================================================
 OUTPUT_DIR = "output"
 
 def plot_top_ratings(df) -> None:
+    """Top 10 clasificaciones de edad más frecuentes (barras)."""
     plt.figure(figsize=(10, 6))
     top_ratings = df['rating'].value_counts().head(10).index
     ax = sns.countplot(
@@ -26,8 +29,8 @@ def plot_top_ratings(df) -> None:
     plt.close()
     print("  ✔ Gráfico 1 generado: 1_top_ratings.png")
 
-
 def plot_type_proportions(df) -> None:
+    """Proporción de Películas vs Series (pie chart)."""
     plt.figure(figsize=(8, 8))
     counts = df['type'].value_counts()
     plt.pie(
@@ -41,8 +44,8 @@ def plot_type_proportions(df) -> None:
     plt.close()
     print("  ✔ Gráfico 2 generado: 2_proporcion_peliculas_series.png")
 
-    
 def plot_violin_releases(df) -> None:
+    """Distribución de años de estreno (violin plot)."""
     plt.figure(figsize=(10, 6))
     sns.violinplot(
         data=df[df['release_year'] > 1990],
@@ -59,6 +62,7 @@ def plot_violin_releases(df) -> None:
     print("  ✔ Gráfico 3 generado: 3_distribucion_lanzamientos_violin.png")
 
 def plot_correlation_heatmap(df) -> None:
+    """Matriz de correlación entre variables numéricas (heatmap)."""
     plt.figure(figsize=(8, 6))
     corr_cols = ['release_year', 'year_added', 'duration_num']
     corr_matrix = df[corr_cols].corr()
@@ -76,6 +80,7 @@ def plot_correlation_heatmap(df) -> None:
     print("  ✔ Gráfico 4 generado: 4_matriz_correlacion.png")
 
 def plot_gauss_duration(movies_df) -> None:
+    """Campana de Gauss de duración en minutos (solo películas)."""
     plt.figure(figsize=(10, 6))
     sns.histplot(data=movies_df, x='duration_num', kde=True, color='purple', label='Películas')
     plt.title('Campana de Gauss: Distribución de Duración (Películas)')
@@ -89,6 +94,7 @@ def plot_gauss_duration(movies_df) -> None:
     print("  ✔ Gráfico 5 generado: 5_campana_gauss_duracion.png")
 
 def plot_scatter_duration(movies_df) -> None:
+    """Dispersión: Año de lanzamiento vs Duración (solo películas)."""
     plt.figure(figsize=(10, 6))
     sns.scatterplot(
         data=movies_df[movies_df['release_year'] > 1980],
@@ -105,6 +111,18 @@ def plot_scatter_duration(movies_df) -> None:
     print("  ✔ Gráfico 6 generado: 6_dispersion_duracion.png")
 
 def run_visualize(source_table: str, sql_tools) -> None:
+    """
+    [Patrón Fachada] Orquestador de la fase Visualize.
+
+    Lee los datos con features desde SQLite y genera los 6 gráficos PNG en output/.
+
+    Parámetros
+    ----------
+    source_table : str
+        Tabla SQLite con los datos caracterizados (salida de Characterize).
+    sql_tools : module
+        Módulo con load_df_from_sql.
+    """
     warnings.simplefilter(action='ignore', category=FutureWarning)
 
     print("\n" + "=" * 40)
