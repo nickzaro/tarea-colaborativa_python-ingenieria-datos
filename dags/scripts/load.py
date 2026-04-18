@@ -14,6 +14,28 @@ def execute_quality_gate(df: pd.DataFrame) -> bool:
 
     return True
 
+def generate_governance_metadata(df: pd.DataFrame, output_path: str) -> None:
+    metadata_dir = "output/metadata"
+    os.makedirs(metadata_dir, exist_ok=True)
+
+    metadata = {
+        "execution_date":        datetime.now().isoformat(),
+        "total_records_inserted": len(df),
+        "columns":               list(df.columns),
+        "target_system":         output_path,
+        "memory_usage_mb":       round(
+            df.memory_usage(deep=True).sum() / (1024 * 1024), 2
+        ),
+    }
+
+    file_timestamp   = datetime.now().strftime('%Y%m%d_%H%M%S')
+    metadata_path    = f"{metadata_dir}/load_log_{file_timestamp}.json"
+
+    with open(metadata_path, "w", encoding="utf-8") as f:
+        json.dump(metadata, f, indent=4)
+
+    print(f"[Auditoría] Metadatos guardados en: {metadata_path}")
+
 def publish_to_data_warehouse(df: pd.DataFrame, sql_tools) -> None:
     target_table = "dim_netflix_titles"
     print(f"[Data Warehouse] Inyectando {len(df)} registros en '{target_table}'...")
